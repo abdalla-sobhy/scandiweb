@@ -1,10 +1,8 @@
 <?php
 $host = "localhost";
-$user = "root";
-$password = "951753bs";
+$user = getenv('DB_USER') ?: 'app_user';
+$password = getenv('DB_PASS') ?: 'strong_password_123';
 $dbname = "scandiweb";
-
-$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
 try {
     $pdo = new PDO($dsn, $user, $password, [
