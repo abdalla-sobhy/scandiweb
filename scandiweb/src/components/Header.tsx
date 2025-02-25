@@ -81,13 +81,13 @@ const handlePlaceOrder = async () => {
 return(
     <>
         {showCart &&  <div className={`${IndexCSS.overlay}`} onClick={() => setShowCart(false)}></div>}
-        <div className={`${IndexCSS.header} w-full flex justify-center items-center`}>
+        <div className={`${IndexCSS.header} w-full flex justify-center items-center bg-white`}>
             <div className={`${IndexCSS.headerContent} flex flex-row justify-between items-center`}>
                 <div className={`flex flex-row gap-7`}>
                     <div>
                         <button 
                             data-testid={category === 'all' ? "active-category-link" : "category-link"} 
-                            className={`${category == 'all' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0'}`} 
+                            className={`${category == 'all' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0 text-black cursor-pointer'}`} 
                             onClick={()=> setCategory('all')}
                         >
                             all
@@ -96,7 +96,7 @@ return(
                     <div>
                         <button 
                             data-testid={category === 'clothes' ? "active-category-link" : "category-link"} 
-                            className={`${category == 'clothes' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0'}`} 
+                            className={`${category == 'clothes' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0 text-black cursor-pointer'}`} 
                             onClick={()=> setCategory('clothes')}
                         >
                             clothes
@@ -105,7 +105,7 @@ return(
                     <div>
                         <button 
                             data-testid={category === 'tech' ? "active-category-link" : "category-link"} 
-                            className={`${category == 'tech' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0'}`} 
+                            className={`${category == 'tech' ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 ' : 'after:scale-x-0 text-black cursor-pointer'}`} 
                             onClick={()=> setCategory('tech')}
                         >
                             tech
