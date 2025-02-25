@@ -70,7 +70,7 @@ return (
                     {data?.products.map((product: productsInfo) => {
                         const kebabCaseName = product.name.toLowerCase().replace(/\s+/g, '-');
                         return (
-                            <div data-testid={`product-${kebabCaseName}`} className={`${IndexCSS.productCard} relative flex flex-col gap-1`} key={product.id}>
+                            <div data-testid={`product-${kebabCaseName}`} className={`${IndexCSS.productCard} relative flex flex-col gap-1 text-black`} key={product.id}>
                                 <div 
                                     className={`${IndexCSS.productImage} ${product.inStock ? 'cursor-pointer' : 'opacity-50 grayscale'}`} 
                                     onClick={() => { setSelectedProductId(product.id); navigateTo(`/ProductPage?category=${category}`); }}
