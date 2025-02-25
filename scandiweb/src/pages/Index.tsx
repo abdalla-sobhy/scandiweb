@@ -57,10 +57,10 @@ if (loading) return <div>Loading...</div>;
 if (error) return <div>Error: {error.message}</div>;
 
 return (
-    <div className="h-full w-full flex-col flex gap-12">
+    <div className="h-full w-full flex-col flex gap-12 bg-white">
         <Header category={category} setCategory={setCategory} toggleWheneAddToCart={toggleWheneAddToCart} itemAdded={itemAdded} />
         <div className={IndexCSS.categoryTitle}>{category ? category : 'Unknown'}</div>
-        <div className="w-full justify-center flex mt-20 pb-12">
+        <div className="w-full justify-center flex mt-20 pb-12 bg-white">
             {data?.products.length === 0 ? (
                 <div className={IndexCSS.noProducts}>
                     No Products found for {category}. Check out later.
