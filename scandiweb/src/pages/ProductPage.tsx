@@ -71,7 +71,7 @@ const handleSetCategory = (newCategory: "all" | "clothes" | "tech") => {
 };
 
 return (
-    <div className="h-full w-full flex-col flex gap-12">
+    <div className="h-full w-full flex-col flex gap-12 text-black bg-white">
         <Header 
             category={categoryFromQuery} 
             setCategory={handleSetCategory} 
