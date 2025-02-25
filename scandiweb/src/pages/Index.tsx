@@ -73,7 +73,7 @@ return (
                             <div data-testid={`product-${kebabCaseName}`} className={`${IndexCSS.productCard} relative flex flex-col gap-1 text-black`} key={product.id}>
                                 <div 
                                     className={`${IndexCSS.productImage} ${product.inStock ? 'cursor-pointer' : 'opacity-50 grayscale'}`} 
-                                    onClick={() => { setSelectedProductId(product.id); navigateTo(`/ProductPage?category=${category}`); }}
+                                    onClick={() =>  product.inStock ? ( setSelectedProductId(product.id), navigateTo(`/ProductPage?category=${category}`))  : null}
                                 >
                                     {!product.inStock && (
                                         <div className={IndexCSS.outOfStockImage}>
@@ -91,14 +91,14 @@ return (
                                     />
                                 )}
                                 <div 
-                                    className={`${IndexCSS.productName} flex pt-5 cursor-pointer`} 
-                                    onClick={() => { setSelectedProductId(product.id); navigateTo(`/ProductPage?category=${category}`); }}
+                                    className={`${IndexCSS.productName} ${product.inStock ? 'cursor-pointer flex pt-5' : 'flex pt-5'}`} 
+                                    onClick={() =>  product.inStock ? ( setSelectedProductId(product.id), navigateTo(`/ProductPage?category=${category}`))  : null}
                                 >
                                     {product.name}
                                 </div>
                                 <div 
-                                    className={`${IndexCSS.productPrice} flex cursor-pointer`} 
-                                    onClick={() => { setSelectedProductId(product.id); navigateTo(`/ProductPage?category=${category}`); }}
+                                    className={`${IndexCSS.productPrice} ${product.inStock ? 'cursor-pointer flex pt-5' : 'flex pt-5'}`} 
+                                    onClick={() =>  product.inStock ? ( setSelectedProductId(product.id), navigateTo(`/ProductPage?category=${category}`))  : null}
                                 >
                                     ${product.price.toFixed(2)}
                                 </div>
