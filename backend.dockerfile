@@ -6,16 +6,23 @@ RUN apt-get update && apt-get install -y \
     zip \
     && docker-php-ext-install mysqli pdo_mysql zip
 
-# Configure Apache
+# Copy application files
 COPY api/ /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
 RUN composer install --no-dev
 
-# Enable modules
+# Enable Apache modules
 RUN a2enmod rewrite headers
 
-# Configure Apache ServerName
+# Copy Apache VirtualHost configuration
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Set Apache ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Restart Apache
+RUN service apache2 restart
