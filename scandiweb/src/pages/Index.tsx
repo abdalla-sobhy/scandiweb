@@ -129,8 +129,8 @@ return (
                     {!product.inStock && (
                     <div className={IndexCSS.outOfStockImage}>
                         <img
-                        src="../../src/assets/out of stock.svg"
-                        alt="out of stock"
+                        src="/assets//outofstock.svg"
+                        alt=""
                         />
                     </div>
                     )}
@@ -146,7 +146,7 @@ return (
                     onClick={() => {
                         handleQuickAddToCart(product);
                     }}
-                    src="../../src/assets/Circle Icon.svg"
+                    src="/assets/Circle Icon.svg"
                     alt=""
                     />
                 )}
