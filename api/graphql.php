@@ -13,7 +13,6 @@ $GLOBALS['pdo'] = $pdo;
 
 try {
     $schema = \GraphQL\SchemaBuilder::build();
-    $echo"backend reached"
     $rawInput = file_get_contents('php://input');
     $input = json_decode($rawInput, true);
     if($input===null){
