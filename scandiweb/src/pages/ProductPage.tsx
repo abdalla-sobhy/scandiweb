@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCT_BY_ID } from "../queries";
 import Header from "../components/Header";
-import productPageCSS from "../../public/styles/ProductPage.module.css";
+import productPageCSS from "../ProductPage.module.css";
 import { useProduct } from "../components/ProductContext";
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';

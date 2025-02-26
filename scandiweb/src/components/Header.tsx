@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import IndexCSS from "../../public/styles/index.module.css";
+import IndexCSS from "../index.module.css";
 import { useMutation } from '@apollo/client';
 import { PLACE_ORDER } from '../queries';
+
+console.log("index css ",IndexCSS)
 
 interface HeaderProps {
     category: string;

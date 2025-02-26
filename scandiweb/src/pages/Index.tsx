@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../queries';
-import IndexCSS from '../../public/styles/index.module.css';
+import IndexCSS from "../index.module.css";
 import { useNavigate } from 'react-router-dom';
 import { useProduct } from "../components/ProductContext";
 import Header from "../components/Header";
