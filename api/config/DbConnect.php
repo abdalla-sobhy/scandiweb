@@ -1,8 +1,11 @@
 <?php
-$host = "localhost";
-$user = getenv('DB_USER') ?: 'app_user';
-$password = getenv('DB_PASS') ?: 'strong_password_123';
+$host = "db";
+$user = 'app_user';
+$password = 'strong_password_123';
 $dbname = "scandiweb";
+
+// Construct DSN string
+$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
 
 try {
     $pdo = new PDO($dsn, $user, $password, [
