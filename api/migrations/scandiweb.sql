@@ -1,6 +1,9 @@
-CREATE DATABASE IF NOT EXISTS scandiweb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS scandiweb;
 USE scandiweb;
 
+CREATE USER IF NOT EXISTS 'app_user'@'%' IDENTIFIED BY 'strong_password_123';
+GRANT ALL PRIVILEGES ON scandiweb.* TO 'app_user'@'%';
+FLUSH PRIVILEGES;
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE

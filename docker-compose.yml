@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=scandiweb
+      - DB_USER=app_user
+      - DB_PASSWORD=strong_password_123
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+      - APACHE_SERVER_NAME=localhost
+    volumes:
+      - ./api:/var/www/html/api
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass  # Add root password
+      MYSQL_DATABASE: scandiweb
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: strong_password_123
+    volumes:
+      - ./api/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysqladmin ping -uroot -p$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      timeout: 10s
+      retries: 5
