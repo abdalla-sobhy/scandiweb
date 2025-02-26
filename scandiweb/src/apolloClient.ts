@@ -1,6 +1,9 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 const client = new ApolloClient({
-  uri: 'http://backend:80/api/', // Changes it when changing server
+  link: new HttpLink({
+    uri: 'http://backend/api/', // ✅ Use Public API URL
+    fetchOptions: { method: 'POST' }, // ✅ Force POST
+  }),
   cache: new InMemoryCache(),
 });
 
