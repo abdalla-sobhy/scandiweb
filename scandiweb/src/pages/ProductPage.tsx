@@ -149,14 +149,14 @@ return (
         <div className={`${productPageCSS.leftRightArrwosDiv}`}>
             <div className="cursor-pointer">
             <img
-                src="../../src/assets/Group 1417.svg"
+                src="/assets/Group 1417.svg"
                 onClick={handlePrevImage}
                 alt="Left Arrow"
             />
             </div>
             <div className="cursor-pointer">
             <img
-                src="../../src/assets/Group 1420.svg"
+                src="/assets/Group 1420.svg"
                 onClick={handleNextImage}
                 alt="Right Arrow"
             />
