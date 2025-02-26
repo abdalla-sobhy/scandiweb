@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 const client = new ApolloClient({
-  uri: 'http://localhost/api/', // Changes it when changing server
+  uri: 'http://52.87.237.144/api/', // Changes it when changing server
   cache: new InMemoryCache(),
 });
 
