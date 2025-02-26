@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY scandiweb/ ./
 
-RUN npm ci && npm run build
+RUN npm i && npm run build
 
 # Stage 2: Production
 FROM nginx:alpine
