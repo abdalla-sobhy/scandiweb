@@ -171,7 +171,7 @@ return (
         </div>
         </div>
         <div className={`${IndexCSS.BrandIconDiv}`}>
-        <img src="/src/assets/Brand icon.svg" alt="" />
+        <img src="/assets/Brand icon.svg" alt="" />
         </div>
         <div className={`flex flex-col`}>
         {cartProducts.length !== 0 && (
@@ -186,7 +186,7 @@ return (
         <img
             className="cursor-pointer"
             onClick={() => setShowCart((prevValue) => !prevValue)}
-            src="/src/assets/Empty Cart.svg"
+            src="/assets/Empty Cart.svg"
             alt=""
         />
         {showCart && (
@@ -290,7 +290,7 @@ return (
                         onClick={() => increaseQuantity(product)}
                         >
                         <img
-                            src="../../src/assets/plus-square.svg"
+                            src="/assets/plus-square.svg"
                             alt=""
                         />
                         </div>
@@ -303,7 +303,7 @@ return (
                         onClick={() => decreaseQuantity(product)}
                         >
                         <img
-                            src="../../src/assets/minus-square.svg"
+                            src="/assets/minus-square.svg"
                             alt=""
                         />
                         </div>
