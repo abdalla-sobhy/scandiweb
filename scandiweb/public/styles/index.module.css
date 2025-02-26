@@ -66,24 +66,23 @@
 .showCart{
     position: absolute;
     width: fit-content;
-    right: 0;
+    right: 40px;
     display: flex;
     margin-top: 3rem;
     background-color: white;
     z-index: 1;
-    left: 57rem;
     padding: 1.5rem;
     padding-bottom: 2rem;
+    background-color: white;
 }
 .showCartEmpty{
     position: absolute;
     width: 33rem;
-    right: 0;
+    right: 40px;
     display: flex;
     margin-top: 3rem;
     background-color: white;
     z-index: 1;
-    left: 57rem;
     padding: 1.5rem;
     padding-bottom: 2rem;
 }
