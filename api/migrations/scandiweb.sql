@@ -23,6 +23,20 @@ CREATE TABLE products (
     CONSTRAINT fk_category FOREIGN KEY (category) REFERENCES categories(name)
 );
 
+CREATE TABLE `orders` (
+    `id` INT(10) NOT NULL AUTO_INCREMENT,
+    `product_id` VARCHAR(100) NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `price` DECIMAL(10,2) NOT NULL,
+    `image` TEXT NOT NULL,
+    `size` VARCHAR(20) NOT NULL,
+    `color` VARCHAR(20) NOT NULL,
+    `category` VARCHAR(50) NOT NULL,
+    `quantity` INT(10) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+)
+
 INSERT INTO categories (name) VALUES 
   ('all'),
   ('clothes'),
