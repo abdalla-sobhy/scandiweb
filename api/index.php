@@ -10,21 +10,6 @@ use GraphQL\GraphQL;
 use GraphQL\Error\FormattedError;
 
 $GLOBALS['pdo'] = $pdo;
-$tablesExist = true;
-try {
-    $stmt = $pdo->query("SHOW TABLES");
-    if ($stmt->rowCount() < 3) {
-        $tablesExist = false;
-    }
-} catch (PDOException $e) {
-    // Tables don't exist or there's an error
-}
-
-// If tables don't exist, run the SQL script
-if (!$tablesExist) {
-    require_once __DIR__ . '/migrations/run_sql_script.php';
-}
-
 
 try {
     $schema = \GraphQL\SchemaBuilder::build();

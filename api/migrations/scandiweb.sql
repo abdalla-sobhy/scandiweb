@@ -4,12 +4,6 @@ USE scandiweb;
 CREATE USER IF NOT EXISTS 'app_user'@'%' IDENTIFIED BY 'strong_password_123';
 GRANT ALL PRIVILEGES ON scandiweb.* TO 'app_user'@'%';
 FLUSH PRIVILEGES;
-
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS orders;
-
-
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
