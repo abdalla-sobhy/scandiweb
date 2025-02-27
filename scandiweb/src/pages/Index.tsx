@@ -82,7 +82,13 @@ const handleQuickAddToCart = async (product: productsInfo) => {
     setItemAdded(true);
 };
 
-if (loading) return <div>Loading...</div>;
+if (loading) return (
+<div className={`${IndexCSS.loader}`}>
+    <div className={`${IndexCSS.item1}`}></div>
+    <div className={`${IndexCSS.item2}`}></div>
+    <div className={`${IndexCSS.item3}`}></div>
+</div>
+)
 if (error) return <div>Error: {error.message}</div>;
 
 return (
@@ -129,7 +135,7 @@ return (
                     {!product.inStock && (
                     <div className={IndexCSS.outOfStockImage}>
                         <img
-                        src="/assets//outofstock.svg"
+                        src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/out%20of%20stock.svg"
                         alt=""
                         />
                     </div>
@@ -146,7 +152,7 @@ return (
                     onClick={() => {
                         handleQuickAddToCart(product);
                     }}
-                    src="/assets/Circle Icon.svg"
+                    src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Circle%20Icon.svg"
                     alt=""
                     />
                 )}
