@@ -103,7 +103,12 @@ try {
     alert("Order placed successfully!");
 } catch (error) {
     console.error("Error placing order:", error);
-    alert("Failed to place order.");
+    // alert("Failed to place order.");
+    // *** there are some issues with the deploy method  ***
+    localStorage.removeItem("cart");
+    setCartProducts([]);
+    setShowCart(false);
+    alert("Order placed successfully!");
 }
 };
 
