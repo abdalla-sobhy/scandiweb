@@ -175,13 +175,13 @@ return (
         </div>
         <div className={`flex flex-col`}>
         {cartProducts.length !== 0 && (
-            <div
+            <button
             data-testid="cart-btn"
             className={`${IndexCSS.cartNumber} cursor-pointer`}
             onClick={() => setShowCart((prevValue) => !prevValue)}
             >
             {cartProducts.length}
-            </div>
+            </button>
         )}
         <img
             className="cursor-pointer"
