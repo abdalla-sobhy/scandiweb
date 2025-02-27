@@ -139,7 +139,7 @@
     display: flex;
     align-items: start;    
 }
-.sizeBox{
+.cartSizeBox{
     width: 34px;
     height: 36px;
     border: 1px solid black;
@@ -152,7 +152,7 @@
     line-height: 18px;
     font-weight: 400;
 }
-.colorBox{
+.cartColorBox{
     width: 36px;
     height: 36px;
 }
