@@ -171,7 +171,7 @@ return (
         </div>
         </div>
         <div className={`${IndexCSS.BrandIconDiv}`}>
-        <img src="/assets/Brand icon.svg" alt="" />
+        <img src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Brand%20icon.svg" alt="" />
         </div>
         <div className={`flex flex-col`}>
         {cartProducts.length !== 0 && (
@@ -186,7 +186,7 @@ return (
         <img
             className="cursor-pointer"
             onClick={() => setShowCart((prevValue) => !prevValue)}
-            src="/assets/Empty Cart.svg"
+            src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Empty%20Cart.svg"
             alt=""
         />
         {showCart && (
@@ -290,7 +290,7 @@ return (
                         onClick={() => increaseQuantity(product)}
                         >
                         <img
-                            src="/assets/plus-square.svg"
+                            src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/plus-square.svg"
                             alt=""
                         />
                         </div>
@@ -303,7 +303,7 @@ return (
                         onClick={() => decreaseQuantity(product)}
                         >
                         <img
-                            src="/assets/minus-square.svg"
+                            src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/minus-square.svg"
                             alt=""
                         />
                         </div>
