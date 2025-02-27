@@ -174,21 +174,22 @@ return (
         <img src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Brand%20icon.svg" alt="" />
         </div>
         <div className={`flex flex-col`}>
-        {cartProducts.length !== 0 && (
-            <div
+            <button
             data-testid="cart-btn"
+            onClick={() => setShowCart((prevValue) => !prevValue)}>
+        {cartProducts.length !== 0 && (
+            <button
             className={`${IndexCSS.cartNumber} cursor-pointer`}
-            onClick={() => setShowCart((prevValue) => !prevValue)}
             >
             {cartProducts.length}
-            </div>
+            </button>
         )}
         <img
             className="cursor-pointer"
-            onClick={() => setShowCart((prevValue) => !prevValue)}
             src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Empty%20Cart.svg"
             alt=""
         />
+        </button>
         {showCart && (
             <div
             className={`${
@@ -236,7 +237,7 @@ return (
                                 data-testid={`cart-item-attribute-size-${size.toLowerCase()}${
                                 product.size === size ? "-selected" : ""
                                 }`}
-                                className={`${IndexCSS.sizeBox} ${
+                                className={`${IndexCSS.cartSizeBox} ${
                                 product.size === size &&
                                 " bg-[#2B2B2B] text-white"
                                 }`}
@@ -269,7 +270,7 @@ return (
                                 data-testid={`cart-item-attribute-color-${color}${
                                     product.color === color ? "-selected" : ""
                                 }`}
-                                className={`${IndexCSS.colorBox} ${
+                                className={`${IndexCSS.cartColorBox} ${
                                     product.color === color
                                     ? "outline-2 outline-[#5ECE7B] outline-offset-1"
                                     : ""
