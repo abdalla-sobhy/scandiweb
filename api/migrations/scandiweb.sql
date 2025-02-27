@@ -1,5 +1,14 @@
-CREATE DATABASE IF NOT EXISTS scandiweb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS scandiweb;
 USE scandiweb;
+
+CREATE USER IF NOT EXISTS 'app_user'@'%' IDENTIFIED BY 'strong_password_123';
+GRANT ALL PRIVILEGES ON scandiweb.* TO 'app_user'@'%';
+FLUSH PRIVILEGES;
+
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS orders;
+
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,7 +41,7 @@ CREATE TABLE `orders` (
     `quantity` INT(10) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
-)
+);
 
 INSERT INTO categories (name) VALUES 
   ('all'),
