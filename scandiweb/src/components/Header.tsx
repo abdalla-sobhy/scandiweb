@@ -111,6 +111,7 @@ return (
 <>
     {showCart && (
     <div
+        data-testid="cart-overlay"
         className={`${IndexCSS.overlay}`}
         onClick={() => setShowCart(false)}
     ></div>
