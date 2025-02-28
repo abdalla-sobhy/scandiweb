@@ -58,8 +58,7 @@ const { data, loading, error } = useQuery(GET_PRODUCT_BY_ID, {
 variables: { id: selectedProductId },
 });
 
-if (loading) return <div>Loading...</div>;
-if (error) return <div>Error: {error.message}</div>;
+
 
 const product = data?.product as Product;
 const images = product?.gallery || [];
@@ -120,7 +119,14 @@ setItemAdded(true);
 const handleSetCategory = (newCategory: "all" | "clothes" | "tech") => {
 navigateTo(`/?category=${newCategory}`);
 };
-
+if (loading) return (
+<div className={`${productPageCSS.loader}`}>
+    <div className={`${productPageCSS.item1}`}></div>
+    <div className={`${productPageCSS.item2}`}></div>
+    <div className={`${productPageCSS.item3}`}></div>
+</div>
+)
+if (error) return <div>Error: {error.message}</div>;
 return (
 <div className="h-full w-full flex-col flex gap-12 text-black bg-white">
     <Header
@@ -221,12 +227,13 @@ return (
             </div>
             <div className="flex flex-col items-start gap-2">
             <div
+                data-testid="product-attribute-color"
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
             >
                 COLOR:
             </div>
             <div
-                data-testid="product-attribute-color"
+                data-testid="product-attribute-color-Green"
                 className="flex flex-row gap-2"
             >
                 <div className={`${productPageCSS.colorChoiceFirstLayer}`}>
@@ -254,9 +261,10 @@ return (
                 ></div>
             </div>
             </div>
-            <div className="flex flex-col items-start gap-4">
+            <div className="flex flex-col items-start gap-4" data-testid="product-attribute-capacity">
             <div
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
+                data-testid="product-attribute-capacity-512G"
             >
                 PRICE:
             </div>
