@@ -1,8 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:80/scandiweb_test/api/index.php',
+  uri: 'http://54.166.42.245/api/',
   cache: new InMemoryCache(),
 });
 
 export default client;
+
