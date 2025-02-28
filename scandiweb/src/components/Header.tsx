@@ -123,24 +123,16 @@ return (
         className={`${IndexCSS.headerContent} flex flex-row justify-between items-center`}
     >
         <div className={`flex flex-row gap-7`}>
-        <div>
-            <button
-            data-testid={
+        <nav className={`flex flex-row gap-7`}>
+        <a data-testid={
                 category === "all" ? "active-category-link" : "category-link"
             }
             className={`${
                 category == "all"
                 ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 '
                 : "after:scale-x-0 text-black cursor-pointer"
-            }`}
-            onClick={() => setCategory("all")}
-            >
-            all
-            </button>
-        </div>
-        <div>
-            <button
-            data-testid={
+            }`} href="/all" onClick={(e) => { e.preventDefault(); setCategory("all"); }}>All</a>
+        <a data-testid={
                 category === "clothes"
                 ? "active-category-link"
                 : "category-link"
@@ -149,27 +141,16 @@ return (
                 category == "clothes"
                 ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 '
                 : "after:scale-x-0 text-black cursor-pointer"
-            }`}
-            onClick={() => setCategory("clothes")}
-            >
-            clothes
-            </button>
-        </div>
-        <div>
-            <button
-            data-testid={
+            }`} href="/clothes" onClick={(e) => { e.preventDefault(); setCategory("clothes"); }}>Clothes</a>
+        <a data-testid={
                 category === "tech" ? "active-category-link" : "category-link"
             }
             className={`${
                 category == "tech"
                 ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 '
                 : "after:scale-x-0 text-black cursor-pointer"
-            }`}
-            onClick={() => setCategory("tech")}
-            >
-            tech
-            </button>
-        </div>
+            }`} href="/tech" onClick={(e) => { e.preventDefault(); setCategory("tech"); }}>Tech</a>
+        </nav>
         </div>
         <div className={`${IndexCSS.BrandIconDiv}`}>
         <img src="https://raw.githubusercontent.com/abdalla-sobhy/scandiwebfrontend/refs/heads/master/src/assets/Brand%20icon.svg" alt="" />
@@ -268,7 +249,7 @@ return (
                                 className={`${IndexCSS.colorChoiceFirstLayer}`}
                             >
                                 <div
-                                data-testid={`cart-item-attribute-color-${color}${
+                                data-testid={`product-attribute-color-${color}${
                                     product.color === color ? "-selected" : ""
                                 }`}
                                 className={`${IndexCSS.cartColorBox} ${
