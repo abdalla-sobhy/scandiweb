@@ -281,7 +281,7 @@ return (
                 data-testid="add-to-cart"
                 className="w-full h-full cursor-pointer"
                 onClick={product.inStock ? handleAddToCart : undefined}
-                disabled={size == null || size == null}
+                disabled={size == null || color == null}
             >
                 ADD TO CART
             </button>
