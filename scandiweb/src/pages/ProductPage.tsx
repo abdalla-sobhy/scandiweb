@@ -275,7 +275,7 @@ return (
             </div>
             </div>
             <div
-            className={`${productPageCSS.addToCartButtonDiv} ${size!=null || color!=null ? 'bg-[#5ECE7B]' : 'bg-gray-500'} `}
+            className={`${productPageCSS.addToCartButtonDiv} ${size!=null && color!=null ? 'bg-[#5ECE7B]' : 'bg-gray-500'} `}
             >
             <button
                 data-testid="add-to-cart"
