@@ -34,8 +34,8 @@ product_id: string;
 name: string;
 price: number;
 image: string;
-size: productSize | null;
-color: productColor | null;
+size: productSize;
+color: productColor;
 category: Category;
 quantity: number;
 }
@@ -45,8 +45,8 @@ const { selectedProductId } = useProduct();
 const [currentImageIndex, setCurrentImageIndex] = useState(0);
 const [toggleWheneAddToCart, setToggleWheneAddToCart] =
 useState<boolean>(false);
-const [size, setSize] = useState<productSize | null>(null);
-const [color, setColor] = useState<productColor | null>(null);
+const [size, setSize] = useState<productSize>("XS");
+const [color, setColor] = useState<productColor>("gray");
 const [itemAdded, setItemAdded] = useState<boolean>(false);
 const [searchParams] = useSearchParams();
 const categoryFromQuery = searchParams.get("category") as
@@ -188,10 +188,10 @@ return (
                 SIZE:
             </div>
             <div
+                data-testid="product-attribute-size"
                 className="flex flex-row gap-3"
             >
                 <div
-                data-testid="product-attribute-size"
                 className={`${productPageCSS.sizeBox} ${
                     size === "XS" && " bg-[#2B2B2B] text-white"
                 }`}
@@ -200,7 +200,6 @@ return (
                 XS
                 </div>
                 <div
-                data-testid="product-attribute-size"
                 className={`${productPageCSS.sizeBox} ${
                     size === "S" && " bg-[#2B2B2B] text-white"
                 }`}
@@ -209,7 +208,6 @@ return (
                 S
                 </div>
                 <div
-                data-testid="product-attribute-size"
                 className={`${productPageCSS.sizeBox} ${
                     size === "M" && " bg-[#2B2B2B] text-white"
                 }`}
@@ -218,7 +216,6 @@ return (
                 M
                 </div>
                 <div
-                data-testid="product-attribute-size"
                 className={`${productPageCSS.sizeBox} ${
                     size === "L" && " bg-[#2B2B2B] text-white"
                 }`}
@@ -230,6 +227,7 @@ return (
             </div>
             <div className="flex flex-col items-start gap-2">
             <div
+                data-testid="product-attribute-color"
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
             >
                 COLOR:
@@ -240,7 +238,6 @@ return (
             >
                 <div className={`${productPageCSS.colorChoiceFirstLayer}`}>
                 <div
-                    data-testid="product-attribute-color"
                     className={`${productPageCSS.colorBox} bg-[#D3D2D5] ${
                     color === "gray" &&
                     " outline-2 outline-[#5ECE7B] outline-offset-1"
@@ -249,7 +246,6 @@ return (
                 ></div>
                 </div>
                 <div
-                data-testid="product-attribute-color"
                 className={`${productPageCSS.colorBox} bg-[#2B2B2B] ${
                     color === "black" &&
                     " outline-2 outline-[#5ECE7B] outline-offset-1"
@@ -257,7 +253,6 @@ return (
                 onClick={() => setColor("black")}
                 ></div>
                 <div
-                data-testid="product-attribute-color"
                 className={`${productPageCSS.colorBox} bg-[#0F6450] ${
                     color === "green" &&
                     " outline-2 outline-[#5ECE7B] outline-offset-1"
@@ -280,13 +275,15 @@ return (
             </div>
             </div>
             <div
-            className={`${productPageCSS.addToCartButtonDiv} ${size!=null || color!=null ? 'bg-[#5ECE7B]' : 'bg-gray-500'} `}
+            className={`${productPageCSS.addToCartButtonDiv} ${
+                !product.inStock ? "disabled" : ""
+            }`}
             >
             <button
                 data-testid="add-to-cart"
                 className="w-full h-full cursor-pointer"
                 onClick={product.inStock ? handleAddToCart : undefined}
-                disabled={size == null || size == null}
+                disabled={!product.inStock}
             >
                 ADD TO CART
             </button>
