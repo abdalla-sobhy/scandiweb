@@ -274,22 +274,20 @@ return (
                 ${product?.price.toFixed(2)}
             </div>
             </div>
-            <div className={productPageCSS.addToCartButtonDiv}>
-    {loading ? (
-        <button data-testid="add-to-cart" disabled className="w-full h-full">
-            LOADING...
-        </button>
-    ) : (
-        <button
+            <div
+            className={`${productPageCSS.addToCartButtonDiv} ${
+                !product.inStock ? "disabled" : ""
+            }`}
+            >
+            <button
             data-testid="add-to-cart"
             className="w-full h-full cursor-pointer"
-            onClick={product?.inStock ? handleAddToCart : undefined}
+            onClick={handleAddToCart}
             disabled={!product?.inStock}
-        >
-            {product?.inStock ? "ADD TO CART" : "OUT OF STOCK"}
-        </button>
-    )}
-</div>
+            >
+            {product?.inStock ? 'ADD TO CART' : 'OUT OF STOCK'}
+            </button>
+            </div>
             <div
             data-testid="product-description"
             className={`${productPageCSS.underButtonText}`}
