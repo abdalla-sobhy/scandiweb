@@ -227,6 +227,7 @@ return (
             </div>
             <div className="flex flex-col items-start gap-2">
             <div
+                data-testid="product-attribute-color"
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
             >
                 COLOR:

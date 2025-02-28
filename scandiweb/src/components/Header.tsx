@@ -137,7 +137,7 @@ return (
                 category == "all"
                 ? ' relative text-green-500 uppercase tracking-wide after:content-[""] after:block after:w-full after:h-[2px] after:bg-green-500 after:mt-3 after:scale-x-150 hover:after:scale-x-150 after:transition-transform after:duration-300 '
                 : "after:scale-x-0 text-black cursor-pointer"
-            }`} href="/" onClick={(e) => { e.preventDefault(); setCategory("all"); }}>All</a>
+            }`} href="/all" onClick={(e) => { e.preventDefault(); setCategory("all"); }}>All</a>
         <a data-testid={
                 category === "clothes"
                 ? "active-category-link"
