@@ -34,8 +34,8 @@ product_id: string;
 name: string;
 price: number;
 image: string;
-size: productSize;
-color: productColor;
+size: productSize | null;
+color: productColor | null;
 category: Category;
 quantity: number;
 }
@@ -45,8 +45,8 @@ const { selectedProductId } = useProduct();
 const [currentImageIndex, setCurrentImageIndex] = useState(0);
 const [toggleWheneAddToCart, setToggleWheneAddToCart] =
 useState<boolean>(false);
-const [size, setSize] = useState<productSize>("XS");
-const [color, setColor] = useState<productColor>("gray");
+const [size, setSize] = useState<productSize | null>(null);
+const [color, setColor] = useState<productColor | null>(null);
 const [itemAdded, setItemAdded] = useState<boolean>(false);
 const [searchParams] = useSearchParams();
 const categoryFromQuery = searchParams.get("category") as
@@ -275,17 +275,15 @@ return (
             </div>
             </div>
             <div
-            className={`${productPageCSS.addToCartButtonDiv} ${
-                !product.inStock ? "disabled" : ""
-            }`}
+            className={`${productPageCSS.addToCartButtonDiv} ${size!=null || color!=null ? 'bg-[#5ECE7B]' : 'bg-gray-500'} `}
             >
             <button
-            data-testid="add-to-cart"
-            className="w-full h-full cursor-pointer"
-            onClick={handleAddToCart}
-            disabled={!product?.inStock}
+                data-testid="add-to-cart"
+                className="w-full h-full cursor-pointer"
+                onClick={product.inStock ? handleAddToCart : undefined}
+                disabled={size == null || size == null}
             >
-            {product?.inStock ? 'ADD TO CART' : 'OUT OF STOCK'}
+                ADD TO CART
             </button>
             </div>
             <div
