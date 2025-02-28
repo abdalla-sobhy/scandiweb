@@ -264,7 +264,7 @@ return (
             <div className="flex flex-col items-start gap-4">
             <div
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
-                data-testid="product-attribute-capacity-512G"
+                data-testid="product-attribute-capacity"
             >
                 PRICE:
             </div>
