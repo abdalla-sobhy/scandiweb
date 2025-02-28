@@ -232,7 +232,7 @@ return (
                 COLOR:
             </div>
             <div
-                data-testid="product-attribute-color"
+                data-testid="product-attribute-color-Green"
                 className="flex flex-row gap-2"
             >
                 <div className={`${productPageCSS.colorChoiceFirstLayer}`}>
@@ -263,6 +263,7 @@ return (
             <div className="flex flex-col items-start gap-4">
             <div
                 className={`${productPageCSS.sizeAndColorAndPriceWordCSS}`}
+                data-testid="product-attribute-capacity-512G"
             >
                 PRICE:
             </div>

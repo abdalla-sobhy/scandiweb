@@ -255,7 +255,7 @@ return (
                                 className={`${IndexCSS.colorChoiceFirstLayer}`}
                             >
                                 <div
-                                data-testid={`cart-item-attribute-color-${color}${
+                                data-testid={`product-attribute-color-${color}${
                                     product.color === color ? "-selected" : ""
                                 }`}
                                 className={`${IndexCSS.cartColorBox} ${
