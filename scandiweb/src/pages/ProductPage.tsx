@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_PRODUCT_BY_ID } from "../queries";
 import Header from "../components/Header";
 import productPageCSS from "../../public/styles/ProductPage.module.css";
-import { useProduct } from "../components/ProductContext";
+// import { useProduct } from "../components/ProductContext";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import parse from "html-react-parser";
@@ -55,16 +55,17 @@ interface OrderItem {
   quantity: number;
 }
 export default function ProductPage() {
-  const { selectedProductId } = useProduct();
+  const [searchParams] = useSearchParams();
+  const productId = searchParams.get('id');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [toggleWheneAddToCart, setToggleWheneAddToCart] =
     useState<boolean>(false);
   const [itemAdded, setItemAdded] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
   const categoryFromQuery = searchParams.get("category") as Category;
   const navigateTo = useNavigate();
   const { data, loading, error } = useQuery(GET_PRODUCT_BY_ID, {
-    variables: { id: selectedProductId },
+    variables: { id: productId },
+    skip: !productId
   });
   const [selectedAttributes, setSelectedAttributes] = useState<
     Record<string, string>
@@ -229,6 +230,7 @@ export default function ProductPage() {
                               handleAttributeSelect(attributeSet.id, item.id)
                             }
                             title={item.displayValue}
+                            data-testid={`product-attribute-color-${item.displayValue}`}
                           />
                         ) : (
                           <div
@@ -243,6 +245,7 @@ export default function ProductPage() {
                             onClick={() =>
                               handleAttributeSelect(attributeSet.id, item.id)
                             }
+                            data-testid={`product-attribute-capacity-${item.displayValue}`}
                           >
                             {item.displayValue}
                           </div>
