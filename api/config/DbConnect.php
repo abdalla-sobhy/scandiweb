@@ -1,5 +1,4 @@
 <?php
-// Set error handling before any output
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
@@ -11,36 +10,35 @@ function jsonError($message, $code = 500) {
     exit;
 }
 
-$host = "localhost";
-$user = "root";
-$password = "951753bs";
-$dbname = "scandiweb";
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+$host = $_ENV['DB_HOST'];
+$user = $_ENV['DB_USER'];
+$password = $_ENV['DB_PASSWORD'];
+$dbname = $_ENV['DB_NAME'];
 
 try {
-    // Initial connection without database
     $pdo = new PDO("mysql:host=$host;charset=utf8", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
     
-    // Create database if not exists
     $pdo->exec("CREATE DATABASE IF NOT EXISTS $dbname");
     $pdo->exec("USE $dbname");
 
-    // Check if tables exist
     $tablesExist = $pdo->query("SHOW TABLES LIKE 'categories'")->rowCount() > 0;
     
     if (!$tablesExist) {
-        // Execute SQL file
         $sqlFile = __DIR__ . '/scandiweb.sql';
         
         if (!file_exists($sqlFile)) {
             jsonError("SQL file not found", 500);
         }
-        
         $sql = file_get_contents($sqlFile);
         
-        // Remove comments and split statements
         $sql = preg_replace('/--.*?(\r\n|\n)/', '', $sql);
         $statements = array_filter(array_map('trim', explode(';', $sql)));
         
@@ -56,7 +54,6 @@ try {
 }
 
 try {
-    // Final connection with database
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
