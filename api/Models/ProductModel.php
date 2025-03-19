@@ -16,7 +16,6 @@ class ProductModel extends AbstractModel {
     return $data;
 }
 
-// Process a field that may be a JSON string or an array.
 private function processField($fieldValue) {
     if (is_array($fieldValue)) {
         return $this->removeTypename($fieldValue);
@@ -35,21 +34,18 @@ private function processProduct($product) {
         return $product;
     }
     
-    // Process attributes.
     if (isset($product['attributes'])) {
         $product['attributes'] = $this->processField($product['attributes']);
     } else {
         $product['attributes'] = [];
     }
     
-    // Process gallery.
     if (isset($product['gallery'])) {
         $product['gallery'] = $this->processField($product['gallery']);
     } else {
         $product['gallery'] = [];
     }
     
-    // Process prices.
     if (isset($product['prices'])) {
         $product['prices'] = $this->processField($product['prices']);
     } else {
@@ -68,7 +64,6 @@ public function getAll() {
             $result[] = $this->processProduct($product);
         } catch (\Exception $e) {
             error_log("Error processing product with id {$product['id']}: " . $e->getMessage());
-            // Return a default product object to satisfy GraphQL non-null constraints.
             $result[] = [
                 'id'         => $product['id'] ?? '',
                 'name'       => $product['name'] ?? 'Unknown',
