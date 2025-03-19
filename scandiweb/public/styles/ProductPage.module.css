@@ -36,14 +36,13 @@
 .productName{
     width: 400px;
     height: 27px;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 30px;
     line-height: 27px;
 }
 .sizeAndColorAndPriceWordCSS{
     width: fit-content;
-    height: 18px;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 18px;
     line-height: 18px;
 }
