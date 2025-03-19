@@ -1,6 +1,7 @@
 {
     "require": {
         "webonyx/graphql-php": "^15.19",
-        "neomerx/cors-psr7": "^3.0"
+        "neomerx/cors-psr7": "^3.0",
+        "vlucas/phpdotenv": "^5.6"
     }
 }
