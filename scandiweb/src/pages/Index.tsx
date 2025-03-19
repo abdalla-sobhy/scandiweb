@@ -164,7 +164,7 @@ export default function Index() {
                     }`}
                     onClick={() => {
                       setSelectedProductId(product.id);
-                      navigateTo(`/ProductPage?category=${category}`);
+                      navigateTo(`/ProductPage?category=${category}&id=${product.id}`);
                     }}
                   >
                     {!product.inStock && (
@@ -199,7 +199,7 @@ export default function Index() {
                     }`}
                     onClick={() => {
                       setSelectedProductId(product.id);
-                      navigateTo(`/ProductPage?category=${category}`);
+                      navigateTo(`/ProductPage?category=${category}&id=${product.id}`);
                     }}
                   >
                     {product.name}
@@ -210,7 +210,7 @@ export default function Index() {
                     }`}
                     onClick={() => {
                       setSelectedProductId(product.id);
-                      navigateTo(`/ProductPage?category=${category}`);
+                      navigateTo(`/ProductPage?category=${category}&id=${product.id}`);
                     }}
                   >
                     {priceData?.currency?.symbol}
