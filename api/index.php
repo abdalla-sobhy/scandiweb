@@ -7,7 +7,6 @@ require_once __DIR__ . '/GraphQL/Schema.php';
 require_once __DIR__ . '/config/DbConnect.php'; 
 
 use GraphQL\GraphQL;
-use GraphQL\Error\FormattedError;
 
 $GLOBALS['pdo'] = $pdo;
 

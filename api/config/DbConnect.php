@@ -2,8 +2,6 @@
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-header('Content-Type: application/json');
-
 function jsonError($message, $code = 500) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
