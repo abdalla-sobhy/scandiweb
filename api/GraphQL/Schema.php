@@ -10,22 +10,52 @@ require_once __DIR__ . '/../Models/ProductModel.php';
 require_once __DIR__ . '/../Models/CategoryModel.php';
 require_once __DIR__ . '/../Models/OrderModel.php';
 
+// Define input types once to avoid naming conflicts.
+$attributeInputType = new InputObjectType([
+    'name' => 'AttributeInput',
+    'fields' => [
+        'id'    => Type::nonNull(Type::id()),
+        'value' => Type::nonNull(Type::string())
+    ]
+]);
+
+$orderItemInputType = new InputObjectType([
+    'name' => 'OrderItemInput',
+    'fields' => [
+        'productId'  => Type::nonNull(Type::id()),
+        'attributes' => Type::nonNull(Type::listOf($attributeInputType)),
+        'quantity'   => Type::nonNull(Type::int())
+    ]
+]);
+
+$cartAttributesInputType = Type::listOf($attributeInputType);
+
 class SchemaBuilder {
     public static function build() {
+        global $attributeInputType, $orderItemInputType; // bring in the globally defined input types
+        
         $categoryType = new ObjectType([
             'name' => 'Category',
             'fields' => [
                 'id'   => Type::id(),
-                'name' => Type::string()
+                'name' => Type::string(),
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Category'; }
+                ]
             ]
         ]);
         
         $attributeItemType = new ObjectType([
-            'name' => 'AttributeItem',
+            'name' => 'Attribute',
             'fields' => [
                 'id'           => Type::id(),
                 'displayValue' => Type::string(),
-                'value'        => Type::string()
+                'value'        => Type::string(),
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Attribute'; }
+                ]
             ]
         ]);
         
@@ -35,35 +65,93 @@ class SchemaBuilder {
                 'id'    => Type::id(),
                 'name'  => Type::string(),
                 'type'  => Type::string(),
-                'items' => Type::listOf($attributeItemType)
+                'items' => Type::listOf($attributeItemType),
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'AttributeSet'; }
+                ]
+            ]
+        ]);
+        
+        $currencyType = new ObjectType([
+            'name' => 'Currency',
+            'fields' => [
+                'label' => Type::string(),
+                'symbol' => Type::string(),
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Currency'; }
+                ]
+            ]
+        ]);
+        
+        $priceType = new ObjectType([
+            'name' => 'Price',
+            'fields' => [
+                'amount' => Type::float(),
+                'currency' => $currencyType,
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Price'; }
+                ]
             ]
         ]);
         
         $productType = new ObjectType([
             'name' => 'Product',
             'fields' => [
-                'id'          => Type::id(),
-                'name'        => Type::string(),
+                'id'          => Type::nonNull(Type::id()),
+                'name'        => Type::nonNull(Type::string()),
                 'description' => Type::string(),
                 'category' => [
                     'type' => $categoryType,
-                    'resolve' => function($product) {
-                        return ['id' => null, 'name' => $product['category']];
+                    'resolve' => function($product) use ($categoryType) {
+                        $categoryModel = new \CategoryModel($GLOBALS['pdo']);
+                        $categoryName = trim($product['category']);
+                        $category = $categoryModel->getByName($categoryName);
+                        if (!$category) {
+                            error_log("Category '$categoryName' not found for product {$product['id']}");
+                            return ['id' => -1, 'name' => 'Unknown'];
+                        }
+                        return $category;
                     }
                 ],
                 'attributes'  => Type::listOf($attributeSetType),
-                'price'       => Type::float(),
-                'currency'    => Type::string(),
+                'prices' => [
+                    'type' => Type::listOf($priceType),
+                    'resolve' => function($product) {
+                        $prices = $product['prices'] ?? [];
+                        if (isset($prices) && is_string($prices)) {
+                            $prices = json_decode($prices, true);
+                        }
+                        if (is_array($prices)) {
+                            foreach($prices as &$price) {
+                                if(isset($price['__typename'])) {
+                                    unset($price['__typename']);
+                                }
+                                if(isset($price['currency']) && is_array($price['currency']) && isset($price['currency']['__typename'])) {
+                                    unset($price['currency']['__typename']);
+                                }
+                            }
+                        }
+                        return $prices;
+                    }
+                ],
                 'inStock'     => Type::boolean(),
                 'brand'       => Type::string(),
                 'gallery' => [
                     'type' => Type::listOf(Type::string()),
                     'resolve' => function($product) {
-                        if (is_string($product['gallery'])) {
-                            return json_decode($product['gallery'], true);
+                        $gallery = $product['gallery'] ?? [];
+                        if (isset($gallery) && is_string($gallery)) {
+                            $gallery = json_decode($gallery, true);
                         }
-                        return $product['gallery'];
+                        return $gallery;
                     }
+                ],
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Product'; }
                 ]
             ]
         ]);
@@ -74,7 +162,11 @@ class SchemaBuilder {
                 'id'         => Type::id(),
                 'product'    => $productType,
                 'attributes' => Type::listOf($attributeItemType),
-                'quantity'   => Type::int()
+                'quantity'   => Type::int(),
+                '__typename' => [
+                    'type' => Type::string(),
+                    'resolve' => function() { return 'Order'; }
+                ]
             ]
         ]);
         
@@ -128,13 +220,7 @@ class SchemaBuilder {
                     'type' => $orderType,
                     'args' => [
                         'productId'  => Type::nonNull(Type::id()),
-                        'attributes' => Type::nonNull(Type::listOf(new ObjectType([
-                            'name' => 'AttributeInput',
-                            'fields' => [
-                                'id'    => Type::nonNull(Type::id()),
-                                'value' => Type::nonNull(Type::string())
-                            ]
-                        ])))
+                        'attributes' => Type::nonNull(Type::listOf($attributeInputType))
                     ],
                     'resolve' => function($root, $args) {
                         $productModel = new \ProductModel($GLOBALS['pdo']);
@@ -142,18 +228,16 @@ class SchemaBuilder {
                         if (!$product) {
                             throw new \Exception("Product not found");
                         }
-                        
+                        $priceData = $product['prices'][0] ?? ['amount' => 0, 'currency' => ['label' => 'USD']];
                         $orderData = [
                             "product_id" => $product['id'],
-                            "name"       => $product['name'],
-                            "price"      => $product['price'],
-                            "image"      => is_array($product['gallery']) ? $product['gallery'][0] : '',
-                            "size"       => "Default",
-                            "color"      => "Default",
-                            "category"   => $product['category'],
-                            "quantity"   => 1
+                            "name" => $product['name'],
+                            "price" => $priceData['amount'],
+                            "currency" => $priceData['currency']['label'],
+                            "image" => is_array($product['gallery']) ? $product['gallery'][0] : '',
+                            "category" => $product['category'],
+                            "quantity" => 1
                         ];
-                        
                         $orderModel = new \OrderModel($GLOBALS['pdo']);
                         $orderModel->addOrder($orderData);
                         $orders = $orderModel->getAll();
@@ -163,44 +247,35 @@ class SchemaBuilder {
                 'placeOrder' => [
                     'type' => Type::listOf($orderType),
                     'args' => [
-                        'items' => Type::nonNull(Type::listOf(new InputObjectType([
-                            'name' => 'OrderItemInput',
-                            'fields' => [
-                                'productId' => Type::nonNull(Type::id()),
-                                'size' => Type::nonNull(Type::string()),
-                                'color' => Type::nonNull(Type::string()),
-                                'quantity' => Type::nonNull(Type::int()),
-                            ]
-                        ])))
+                        'items' => Type::nonNull(Type::listOf($orderItemInputType))
                     ],
                     'resolve' => function($root, $args) {
                         $orderModel = new \OrderModel($GLOBALS['pdo']);
                         $productModel = new \ProductModel($GLOBALS['pdo']);
-                        $createdOrders = [];
-                        
                         foreach ($args['items'] as $item) {
                             $product = $productModel->getById($item['productId']);
                             if (!$product) {
                                 throw new \Exception("Product not found: " . $item['productId']);
                             }
-                            
+                            $attributes = [];
+                            foreach ($item['attributes'] as $attr) {
+                                $attributes[] = [
+                                    'id' => $attr['id'],
+                                    'value' => $attr['value']
+                                ];
+                            }
                             $orderData = [
                                 "product_id" => $product['id'],
                                 "name" => $product['name'],
-                                "price" => $product['price'],
-                                "image" => is_array($product['gallery']) ? 
-                                    $product['gallery'][0] : $product['gallery'],
-                                "size" => $item['size'],
-                                "color" => $item['color'],
+                                "price" => isset($product['prices'][0]['amount']) ? $product['prices'][0]['amount'] : 0,
+                                "image" => is_array($product['gallery']) ? $product['gallery'][0] : '',
                                 "category" => $product['category'],
+                                "attributes" => json_encode($attributes),
                                 "quantity" => $item['quantity']
                             ];
-                            
                             $orderModel->addOrder($orderData);
-                            $createdOrders[] = $orderModel->getAll();
                         }
-                        
-                        return array_merge(...$createdOrders);
+                        return $orderModel->getAll();
                     }
                 ]
             ]
