@@ -7,7 +7,6 @@ require_once __DIR__ . '/GraphQL/Schema.php';
 require_once __DIR__ . '/config/DbConnect.php'; 
 
 use GraphQL\GraphQL;
-use GraphQL\Error\FormattedError;
 
 $GLOBALS['pdo'] = $pdo;
 
@@ -27,11 +26,14 @@ try {
     $result = GraphQL::executeQuery($schema, $query, null, null, $variables);
     $output = $result->toArray();
 } catch (\Exception $e) {
-    $output = [
-        'errors' => [
-            FormattedError::createFromException($e)
-        ]
-    ];
+  $output = [
+      'errors' => [
+          [
+              'message' => $e->getMessage(),
+              'trace' => $e->getTraceAsString() // Remove in production
+          ]
+      ]
+  ];
 }
 
 header('Content-Type: application/json');
