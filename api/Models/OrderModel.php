@@ -2,39 +2,34 @@
 require_once 'AbstractModel.php';
 
 class OrderModel extends AbstractModel {
-    public function addOrder(array $data): array {
-        $stmt = $this->pdo->prepare("SELECT id, quantity FROM orders WHERE product_id = :product_id AND size = :size AND color = :color");
+    public function addOrder($orderData) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO orders 
+            (product_id, name, price, image, category, attributes, quantity)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+      
         $stmt->execute([
-            ":product_id" => $data["product_id"],
-            ":size" => $data["size"],
-            ":color" => $data["color"]
-        ]);
-        $existingOrder = $stmt->fetch();
-        
-        if ($existingOrder) {
-            $stmt = $this->pdo->prepare("UPDATE orders SET quantity = quantity + 1 WHERE id = :id");
-            $stmt->execute([":id" => $existingOrder["id"]]);
-        } else {
-            $stmt = $this->pdo->prepare("INSERT INTO orders (product_id, name, price, image, size, color, category, quantity) VALUES (:product_id, :name, :price, :image, :size, :color, :category, :quantity)");
-            $stmt->execute([
-                ":product_id" => $data["product_id"],
-                ":name" => $data["name"],
-                ":price" => $data["price"],
-                ":image" => $data["image"],
-                ":size" => $data["size"],
-                ":color" => $data["color"],
-                ":category" => $data["category"],
-                ":quantity" => $data["quantity"]
-            ]);
-        }
-        
-        return ["message" => "Product added to cart"];
+          $orderData['product_id'],
+          $orderData['name'],
+          $orderData['price'],
+          $orderData['image'],
+          $orderData['category'],
+          $orderData['attributes'] ?? json_encode([]),
+          $orderData['quantity']
+      ]);
+      return ["message" => "Product added to cart"];
     }
     
     public function getAll() {
-        $stmt = $this->pdo->query("SELECT * FROM orders");
-        return $stmt->fetchAll();
-    }
+      $stmt = $this->pdo->query("SELECT * FROM orders");
+      $orders = $stmt->fetchAll();
+      
+      return array_map(function($order) {
+          $order['attributes'] = json_decode($order['attributes'], true) ?? [];
+          return $order;
+      }, $orders);
+  }
     
     public function increaseQuantity(int $id): array {
         $stmt = $this->pdo->prepare("UPDATE orders SET quantity = quantity + 1 WHERE id = :id");

@@ -28,6 +28,7 @@
     row-gap: 7rem;
 }
 .productImage{
+    cursor: pointer;
     width: 354px;
     height: 330px;
 }
@@ -140,7 +141,8 @@
     align-items: start;    
 }
 .cartSizeBox{
-    width: 34px;
+    width: fit-content;
+    padding: 5px;
     height: 36px;
     border: 1px solid black;
     justify-content: center;
@@ -151,6 +153,7 @@
     font-size: 18px;
     line-height: 18px;
     font-weight: 400;
+    text-align: left;
 }
 .cartColorBox{
     width: 36px;

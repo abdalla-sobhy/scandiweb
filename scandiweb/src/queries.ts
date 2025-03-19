@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_CATEGORIES = gql`
   query GetCategories {
@@ -14,41 +14,78 @@ export const GET_PRODUCTS = gql`
     products(category: $category) {
       id
       name
-      price
+      prices {
+        amount
+        currency {
+          symbol
+        }
+      }
       gallery
       category {
         name
       }
       inStock
+      attributes {
+        id
+        name
+        type
+        items {
+          id
+          value
+          displayValue
+        }
+      }
     }
   }
 `;
 
 export const GET_PRODUCT_BY_ID = gql`
   query GetProductById($id: ID!) {
-  product(id: $id) {
-    id
-    name
-    description
-    price
-    category {
+    product(id: $id) {
+      id
       name
+      description
+      prices {
+        amount
+        currency {
+          symbol
+        }
+      }
+      category {
+        name
+      }
+      gallery
+      inStock
+      attributes {
+        id
+        name
+        type
+        items {
+          id
+          value
+          displayValue
+        }
+      }
     }
-    gallery
-    inStock
   }
-}
 `;
 
 export const PLACE_ORDER = gql`
   mutation PlaceOrder($items: [OrderItemInput!]!) {
     placeOrder(items: $items) {
-      id
-      product {
-        id
-        name
-      }
-      quantity
+      success
+      message
     }
+  }
+  
+  input OrderItemInput {
+    productId: ID!
+    attributes: [AttributeInput!]!
+    quantity: Int!
+  }
+
+  input AttributeInput {
+    id: ID!
+    value: String!
   }
 `;
