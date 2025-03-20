@@ -2,38 +2,32 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/GraphQL/Schema.php';
-require_once __DIR__ . '/config/DbConnect.php'; 
 
-use GraphQL\GraphQL;
+require_once __DIR__ . '/../vendor/autoload.php';
+$pdo = require_once __DIR__ . '/../config/DbConnect.php';
 
-$GLOBALS['pdo'] = $pdo;
+use GraphQL\GraphQL as WebonyxGraphQL;
+use App\GraphQL\SchemaBuilder;
 
 try {
-    $schema = \GraphQL\SchemaBuilder::build();
+    $schema = SchemaBuilder::build();
 
     $rawInput = file_get_contents('php://input');
     $input = json_decode($rawInput, true);
-    if($input===null){
+    if ($input === null) {
         echo json_encode(["error" => "Invalid JSON body"]);
-    exit;
+        exit;
     }
 
     $query = $input['query'];
     $variables = isset($input['variables']) ? $input['variables'] : null;
 
-    $result = GraphQL::executeQuery($schema, $query, null, null, $variables);
+    $context = ['pdo' => $pdo];
+
+    $result = WebonyxGraphQL::executeQuery($schema, $query, null, $context, $variables);
     $output = $result->toArray();
 } catch (\Exception $e) {
-  $output = [
-      'errors' => [
-          [
-              'message' => $e->getMessage(),
-              'trace' => $e->getTraceAsString() // Remove in production
-          ]
-      ]
-  ];
+    $output = ['error' => $e->getMessage()];
 }
 
 header('Content-Type: application/json');
