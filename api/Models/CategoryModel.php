@@ -1,5 +1,5 @@
 <?php
-require_once 'AbstractModel.php';
+namespace App\Models;
 
 class CategoryModel extends AbstractModel {
     public function getAll() {

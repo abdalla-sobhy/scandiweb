@@ -1,8 +1,8 @@
 <?php
-require_once 'AttributeModel.php';
+namespace App\Models;
 
 class TextAttributeModel extends AttributeModel {
-    public function __construct(PDO $pdo) {
+    public function __construct(\PDO $pdo) {
         parent::__construct($pdo, 'text');
     }
     
