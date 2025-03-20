@@ -1,6 +1,5 @@
 <?php
-require_once 'AbstractModel.php';
-
+namespace App\Models;
 class ProductModel extends AbstractModel {
 
   private function removeTypename($data) {
