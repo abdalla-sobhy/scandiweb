@@ -1,5 +1,5 @@
 <?php
-require_once 'AbstractModel.php';
+namespace App\Models;
 
 class OrderModel extends AbstractModel {
     public function addOrder($orderData) {
