@@ -1,39 +1,34 @@
 <?php
-namespace GraphQL;
+namespace App\GraphQL;
 
 use GraphQL\Type\Schema;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\InputObjectType;
-
-require_once __DIR__ . '/../Models/ProductModel.php';
-require_once __DIR__ . '/../Models/CategoryModel.php';
-require_once __DIR__ . '/../Models/OrderModel.php';
-
-// Define input types once to avoid naming conflicts.
-$attributeInputType = new InputObjectType([
-    'name' => 'AttributeInput',
-    'fields' => [
-        'id'    => Type::nonNull(Type::id()),
-        'value' => Type::nonNull(Type::string())
-    ]
-]);
-
-$orderItemInputType = new InputObjectType([
-    'name' => 'OrderItemInput',
-    'fields' => [
-        'productId'  => Type::nonNull(Type::id()),
-        'attributes' => Type::nonNull(Type::listOf($attributeInputType)),
-        'quantity'   => Type::nonNull(Type::int())
-    ]
-]);
-
-$cartAttributesInputType = Type::listOf($attributeInputType);
+use App\Models\ProductModel;
+use App\Models\CategoryModel;
+use App\Models\OrderModel;
 
 class SchemaBuilder {
     public static function build() {
-        global $attributeInputType, $orderItemInputType; // bring in the globally defined input types
-        
+        // Define input types
+        $attributeInputType = new InputObjectType([
+            'name' => 'AttributeInput',
+            'fields' => [
+                'id'    => Type::nonNull(Type::id()),
+                'value' => Type::nonNull(Type::string())
+            ]
+        ]);
+
+        $orderItemInputType = new InputObjectType([
+            'name' => 'OrderItemInput',
+            'fields' => [
+                'productId'  => Type::nonNull(Type::id()),
+                'attributes' => Type::nonNull(Type::listOf($attributeInputType)),
+                'quantity'   => Type::nonNull(Type::int())
+            ]
+        ]);
+
         $categoryType = new ObjectType([
             'name' => 'Category',
             'fields' => [
@@ -105,8 +100,8 @@ class SchemaBuilder {
                 'description' => Type::string(),
                 'category' => [
                     'type' => $categoryType,
-                    'resolve' => function($product) use ($categoryType) {
-                        $categoryModel = new \CategoryModel($GLOBALS['pdo']);
+                    'resolve' => function($product, $args, $context) {
+                        $categoryModel = new CategoryModel($context['pdo']);
                         $categoryName = trim($product['category']);
                         $category = $categoryModel->getByName($categoryName);
                         if (!$category) {
@@ -121,17 +116,13 @@ class SchemaBuilder {
                     'type' => Type::listOf($priceType),
                     'resolve' => function($product) {
                         $prices = $product['prices'] ?? [];
-                        if (isset($prices) && is_string($prices)) {
+                        if (is_string($prices)) {
                             $prices = json_decode($prices, true);
                         }
-                        if (is_array($prices)) {
-                            foreach($prices as &$price) {
-                                if(isset($price['__typename'])) {
-                                    unset($price['__typename']);
-                                }
-                                if(isset($price['currency']) && is_array($price['currency']) && isset($price['currency']['__typename'])) {
-                                    unset($price['currency']['__typename']);
-                                }
+                        foreach($prices as &$price) {
+                            unset($price['__typename']);
+                            if(isset($price['currency']['__typename'])) {
+                                unset($price['currency']['__typename']);
                             }
                         }
                         return $prices;
@@ -143,7 +134,7 @@ class SchemaBuilder {
                     'type' => Type::listOf(Type::string()),
                     'resolve' => function($product) {
                         $gallery = $product['gallery'] ?? [];
-                        if (isset($gallery) && is_string($gallery)) {
+                        if (is_string($gallery)) {
                             $gallery = json_decode($gallery, true);
                         }
                         return $gallery;
@@ -175,9 +166,8 @@ class SchemaBuilder {
             'fields' => [
                 'categories' => [
                     'type' => Type::listOf($categoryType),
-                    'resolve' => function() {
-                        $categoryModel = new \CategoryModel($GLOBALS['pdo']);
-                        return $categoryModel->getAll();
+                    'resolve' => function($root, $args, $context) {
+                        return (new CategoryModel($context['pdo']))->getAll();
                     }
                 ],
                 'products' => [
@@ -185,12 +175,11 @@ class SchemaBuilder {
                     'args' => [
                         'category' => Type::string()
                     ],
-                    'resolve' => function($root, $args) {
-                        $productModel = new \ProductModel($GLOBALS['pdo']);
-                        if (!empty($args['category'])) {
-                            return $productModel->getByCategory($args['category']);
-                        }
-                        return $productModel->getAll();
+                    'resolve' => function($root, $args, $context) {
+                        $model = new ProductModel($context['pdo']);
+                        return isset($args['category']) 
+                            ? $model->getByCategory($args['category'])
+                            : $model->getAll();
                     }
                 ],
                 'product' => [
@@ -198,16 +187,14 @@ class SchemaBuilder {
                     'args' => [
                         'id' => Type::nonNull(Type::id())
                     ],
-                    'resolve' => function($root, $args) {
-                        $productModel = new \ProductModel($GLOBALS['pdo']);
-                        return $productModel->getById($args['id']);
+                    'resolve' => function($root, $args, $context) {
+                        return (new ProductModel($context['pdo']))->getById($args['id']);
                     }
                 ],
                 'cart' => [
                     'type' => Type::listOf($orderType),
-                    'resolve' => function() {
-                        $orderModel = new \OrderModel($GLOBALS['pdo']);
-                        return $orderModel->getAll();
+                    'resolve' => function($root, $args, $context) {
+                        return (new OrderModel($context['pdo']))->getAll();
                     }
                 ]
             ]
@@ -222,25 +209,23 @@ class SchemaBuilder {
                         'productId'  => Type::nonNull(Type::id()),
                         'attributes' => Type::nonNull(Type::listOf($attributeInputType))
                     ],
-                    'resolve' => function($root, $args) {
-                        $productModel = new \ProductModel($GLOBALS['pdo']);
-                        $product = $productModel->getById($args['productId']);
+                    'resolve' => function($root, $args, $context) {
+                        $product = (new ProductModel($context['pdo']))->getById($args['productId']);
                         if (!$product) {
                             throw new \Exception("Product not found");
                         }
-                        $priceData = $product['prices'][0] ?? ['amount' => 0, 'currency' => ['label' => 'USD']];
+                        
                         $orderData = [
                             "product_id" => $product['id'],
                             "name" => $product['name'],
-                            "price" => $priceData['amount'],
-                            "currency" => $priceData['currency']['label'],
-                            "image" => is_array($product['gallery']) ? $product['gallery'][0] : '',
+                            "price" => $product['prices'][0]['amount'] ?? 0,
+                            "image" => $product['gallery'][0] ?? '',
                             "category" => $product['category'],
                             "quantity" => 1
                         ];
-                        $orderModel = new \OrderModel($GLOBALS['pdo']);
-                        $orderModel->addOrder($orderData);
-                        $orders = $orderModel->getAll();
+                        
+                        (new OrderModel($context['pdo']))->addOrder($orderData);
+                        $orders = (new OrderModel($context['pdo']))->getAll();
                         return end($orders);
                     }
                 ],
@@ -249,30 +234,26 @@ class SchemaBuilder {
                     'args' => [
                         'items' => Type::nonNull(Type::listOf($orderItemInputType))
                     ],
-                    'resolve' => function($root, $args) {
-                        $orderModel = new \OrderModel($GLOBALS['pdo']);
-                        $productModel = new \ProductModel($GLOBALS['pdo']);
+                    'resolve' => function($root, $args, $context) {
+                        $orderModel = new OrderModel($context['pdo']);
+                        $productModel = new ProductModel($context['pdo']);
+                        
                         foreach ($args['items'] as $item) {
                             $product = $productModel->getById($item['productId']);
                             if (!$product) {
                                 throw new \Exception("Product not found: " . $item['productId']);
                             }
-                            $attributes = [];
-                            foreach ($item['attributes'] as $attr) {
-                                $attributes[] = [
-                                    'id' => $attr['id'],
-                                    'value' => $attr['value']
-                                ];
-                            }
+                            
                             $orderData = [
                                 "product_id" => $product['id'],
                                 "name" => $product['name'],
-                                "price" => isset($product['prices'][0]['amount']) ? $product['prices'][0]['amount'] : 0,
-                                "image" => is_array($product['gallery']) ? $product['gallery'][0] : '',
+                                "price" => $product['prices'][0]['amount'] ?? 0,
+                                "image" => $product['gallery'][0] ?? '',
                                 "category" => $product['category'],
-                                "attributes" => json_encode($attributes),
+                                "attributes" => json_encode($item['attributes']),
                                 "quantity" => $item['quantity']
                             ];
+                            
                             $orderModel->addOrder($orderData);
                         }
                         return $orderModel->getAll();
