@@ -10,7 +10,6 @@ use GraphQL\GraphQL as WebonyxGraphQL;
 use App\GraphQL\SchemaBuilder;
 
 try {
-    // Build schema (we don't need to pass PDO here because we use the context)
     $schema = SchemaBuilder::build();
 
     $rawInput = file_get_contents('php://input');
@@ -23,7 +22,6 @@ try {
     $query = $input['query'];
     $variables = isset($input['variables']) ? $input['variables'] : null;
 
-    // Pass the PDO instance in the context instead of using globals
     $context = ['pdo' => $pdo];
 
     $result = WebonyxGraphQL::executeQuery($schema, $query, null, $context, $variables);
