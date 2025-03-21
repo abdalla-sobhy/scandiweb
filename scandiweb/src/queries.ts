@@ -77,15 +77,4 @@ export const PLACE_ORDER = gql`
       message
     }
   }
-  
-  input OrderItemInput {
-    productId: ID!
-    attributes: [AttributeInput!]!
-    quantity: Int!
-  }
-
-  input AttributeInput {
-    id: ID!
-    value: String!
-  }
 `;
