@@ -1,7 +1,20 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+// Helper function to set a header only if it hasn't been set already.
+function set_unique_header($headerName, $headerValue) {
+    // Here I get the list of headers that already set.
+    $currentHeaders = headers_list();
+    foreach ($currentHeaders as $header) {
+        // Check if the header has already been sent (case-insensitive).
+        if (stripos($header, $headerName . ":") === 0) {
+            return;
+        }
+    }
+    header("$headerName: $headerValue");
+}
+
+set_unique_header("Access-Control-Allow-Origin", "*");
+set_unique_header("Access-Control-Allow-Headers", "Content-Type");
+set_unique_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
 
 require_once __DIR__ . '/../vendor/autoload.php';
 $pdo = require_once __DIR__ . '/../config/DbConnect.php';
