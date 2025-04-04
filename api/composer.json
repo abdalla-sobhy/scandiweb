@@ -12,6 +12,5 @@
         "App\\GraphQL\\": "src/GraphQL/",
         "App\\": "src/"
     }
-}
-
+  }
 }
