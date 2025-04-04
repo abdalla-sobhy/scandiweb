@@ -13,7 +13,10 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
     'Neomerx\\Cors\\' => array($vendorDir . '/neomerx/cors-psr7/src'),
-    'GraphQL\\' => array($vendorDir . '/webonyx/graphql-php/src'),
+    'GraphQL\\' => array($baseDir . '/src/GraphQL', $vendorDir . '/webonyx/graphql-php/src'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
+    'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
+    'App\\Models\\' => array($baseDir . '/Models'),
+    'App\\GraphQL\\' => array($baseDir . '/src/GraphQL'),
 );
