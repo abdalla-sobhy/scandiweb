@@ -11,7 +11,7 @@ use App\Models\OrderModel;
 
 class SchemaBuilder {
     public static function build() {
-        // Define input types
+
         $attributeInputType = new InputObjectType([
             'name' => 'AttributeInput',
             'fields' => [
@@ -199,6 +199,18 @@ class SchemaBuilder {
                 ]
             ]
         ]);
+
+        $placeOrderResponseType = new ObjectType([
+          'name' => 'PlaceOrderResponse',
+          'fields' => [
+              'success' => Type::boolean(),
+              'message' => Type::string(),
+              '__typename' => [
+                  'type' => Type::string(),
+                  'resolve' => function() { return 'PlaceOrderResponse'; }
+              ]
+          ]
+      ]);
         
         $mutationType = new ObjectType([
             'name' => 'Mutation',
@@ -230,7 +242,7 @@ class SchemaBuilder {
                     }
                 ],
                 'placeOrder' => [
-                    'type' => Type::listOf($orderType),
+                    'type' => $placeOrderResponseType,
                     'args' => [
                         'items' => Type::nonNull(Type::listOf($orderItemInputType))
                     ],
@@ -238,25 +250,35 @@ class SchemaBuilder {
                         $orderModel = new OrderModel($context['pdo']);
                         $productModel = new ProductModel($context['pdo']);
                         
-                        foreach ($args['items'] as $item) {
-                            $product = $productModel->getById($item['productId']);
-                            if (!$product) {
-                                throw new \Exception("Product not found: " . $item['productId']);
+                        try {
+                            foreach ($args['items'] as $item) {
+                                $product = $productModel->getById($item['productId']);
+                                if (!$product) {
+                                    throw new \Exception("Product not found: " . $item['productId']);
+                                }
+                                
+                                $orderData = [
+                                    "product_id" => $product['id'],
+                                    "name" => $product['name'],
+                                    "price" => $product['prices'][0]['amount'] ?? 0,
+                                    "image" => $product['gallery'][0] ?? '',
+                                    "category" => $product['category'],
+                                    "attributes" => json_encode($item['attributes']),
+                                    "quantity" => $item['quantity']
+                                ];
+                                
+                                $orderModel->addOrder($orderData);
                             }
-                            
-                            $orderData = [
-                                "product_id" => $product['id'],
-                                "name" => $product['name'],
-                                "price" => $product['prices'][0]['amount'] ?? 0,
-                                "image" => $product['gallery'][0] ?? '',
-                                "category" => $product['category'],
-                                "attributes" => json_encode($item['attributes']),
-                                "quantity" => $item['quantity']
+                            return [
+                                'success' => true,
+                                'message' => 'Order placed successfully!'
                             ];
-                            
-                            $orderModel->addOrder($orderData);
+                        } catch (\Exception $e) {
+                            return [
+                                'success' => false,
+                                'message' => $e->getMessage()
+                            ];
                         }
-                        return $orderModel->getAll();
                     }
                 ]
             ]
