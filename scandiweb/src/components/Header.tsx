@@ -112,14 +112,9 @@ export default function Header({
       setCartProducts([]);
       setShowCart(false);
       alert("Order placed successfully!");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      // error in DevOps Programming field
-      // alert("Failed to place order.");
-      localStorage.removeItem("cart");
-      setCartProducts([]);
-      setShowCart(false);
-      alert("Order placed successfully!");
+      console.error("Error placing order:", error);
+      alert("Failed to place order.");
     }
   };
 
