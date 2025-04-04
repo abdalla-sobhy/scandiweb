@@ -47,6 +47,7 @@ class ComposerStaticInitc38c7dd4ea92379d92497be42e5ed525
         array (
             'App\\Models\\' => 11,
             'App\\GraphQL\\' => 12,
+            'App\\' => 4,
         ),
     );
 
@@ -103,6 +104,10 @@ class ComposerStaticInitc38c7dd4ea92379d92497be42e5ed525
         'App\\GraphQL\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/GraphQL',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 

@@ -19,4 +19,5 @@ return array(
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'App\\Models\\' => array($baseDir . '/Models'),
     'App\\GraphQL\\' => array($baseDir . '/src/GraphQL'),
+    'App\\' => array($baseDir . '/src'),
 );
